@@ -38,11 +38,11 @@ app.use(session({
     cookie: { secure: true }
   }))
 
-app.get('/',(req,res)=>{
-res.render('index',{
-    title: "Home"
-});
-})
+// Set routers
+const pages = require('./routers/pages.js');
+const adminPages = require('./routers/admin_pages.js');
+app.use('/admin/pages',adminPages);
+app.use('/',pages);
 
 // Start the server
 const PORT = 5000;
