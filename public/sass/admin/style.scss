@@ -1,0 +1,7 @@
+.sorting{
+    tr{
+        &:not(.home){
+            cursor: pointer;
+        }
+    }
+}
