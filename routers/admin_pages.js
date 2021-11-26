@@ -101,6 +101,85 @@ router.post("/reoerder-pages", (req, res) => {
    }
   });
 
+  // Get Edit pages
+router.get("/edit-page/:slug", (req, res) => {
+ Page.findOne({slug: req.params.slug}, (err,page)=>{
+
+  if (err) return console.log(err);
+
+  res.render('admin/edit_page', {
+    title: page.title,
+    slug: page.slug,
+    content: page.content,
+    id: page._id
+});
+
+ });
+
+
+});
+
+
+// Post edit pages
+router.post("/edit-page/:slug", (req, res) => {
+  
+  req.checkBody("title", "Title must have a value.").notEmpty();
+  req.checkBody("content", "Content must have a value.").notEmpty();
+
+  const title = req.body.title;
+  const slug = req.body.slug.replace(/\s+/g, "-").toLowerCase();
+  if (slug == "") slug = title.replace(/\s+/g, "-").toLowerCase();
+  const content = req.body.content;
+  const id = req.body.id;
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    console.log("errors");
+    res.render("admin/edit_page", {
+      errors: errors,
+      title: title,
+      slug: slug,
+      content: content,
+      id: id
+    });
+  } else {
+    Page.findOne({slug: slug, _id: {'$ne' : id}},(err, page)=>{
+        if (page) {
+            req.flash('danger', 'Page slug exists, choose another.');
+            res.render("admin/edit_page", {
+                title: title,
+                slug: slug,
+                content: content,
+                id: id
+              });
+        }else{
+              Page.findById(id, (err,page)=>{
+                if (err) return console.log(err);
+
+                page.title = title;
+                page.slug = slug;
+                page.content = content;
+
+
+                 page.save((err)=>{
+                    if (err) return console.log(err);
+
+                    req.flash('success', 'Page added');
+                    res.redirect('/admin/pages/edit-page/'+page.slug)
+                        
+                    
+                });
+
+
+              });
+
+               
+        }
+    });
+  }
+});
+
 
 //   Exports
 module.exports = router;
