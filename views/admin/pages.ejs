@@ -31,18 +31,6 @@
             </table>
 </div>
 <script  src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
-<script>
-    $('tbody').sortable({
 
-        items: "tr:not('.home')",
-        placeholder:"ui-state-hightlight",
-        update:function () {
-            let ids = $('tbody').sortable("serialize");
-            let url = "/admin/pages/reorder-pages";
-
-            $.post(url, ids);
-        }
-    });
-</script>
 <%- include('../layouts/adminfooter'); -%>
 

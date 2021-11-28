@@ -1,0 +1,18 @@
+<script>
+=====================================================
+pages.ejs
+
+
+    $('tbody').sortable({
+
+        items: "tr:not('.home')",
+        placeholder:"ui-state-hightlight",
+        update:function () {
+            let ids = $('tbody').sortable("serialize");
+            let url = "/admin/pages/reorder-pages";
+
+            $.post(url, ids);
+        }
+    });
+</script>
+=====================================================

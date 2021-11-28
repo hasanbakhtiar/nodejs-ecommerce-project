@@ -122,7 +122,6 @@ router.get("/edit-page/:slug", (req, res) => {
 
 // Post edit pages
 router.post("/edit-page/:slug", (req, res) => {
-  
   req.checkBody("title", "Title must have a value.").notEmpty();
   req.checkBody("content", "Content must have a value.").notEmpty();
 
@@ -141,45 +140,53 @@ router.post("/edit-page/:slug", (req, res) => {
       title: title,
       slug: slug,
       content: content,
-      id: id
+      id:id
     });
   } else {
-    Page.findOne({slug: slug, _id: {'$ne' : id}},(err, page)=>{
+    Page.findOne({slug: slug, _id:{'$ne':id}},(err, page)=>{
         if (page) {
             req.flash('danger', 'Page slug exists, choose another.');
             res.render("admin/edit_page", {
                 title: title,
                 slug: slug,
                 content: content,
-                id: id
+                id:id
               });
         }else{
-              Page.findById(id, (err,page)=>{
-                if (err) return console.log(err);
 
-                page.title = title;
-                page.slug = slug;
-                page.content = content;
+          Page.findById(id, (err,page)=>{
 
-
-                 page.save((err)=>{
                     if (err) return console.log(err);
+                    page.title = title;
+                    page.slug = slug;
+                    page.content = content;
 
-                    req.flash('success', 'Page added');
-                    res.redirect('/admin/pages/edit-page/'+page.slug)
+
+                      page.save((err)=>{
+                        if (err) return console.log(err);
+
+                        req.flash('success', 'Page added');
+                        res.redirect('/admin/pages')
+                            
                         
-                    
-                });
+                      });
 
-
-              });
-
-               
+          });
+            
+          
         }
-    });
+    })
   }
 });
 
+// Get delete  page index
+router.get("/delete-page/:id", (req, res) => {
+      Page.findByIdAndRemove(req.params.id, (err)=>{
+        if(err) return console.log(err);
+        req.flash('success', 'Page delete');
+        res.redirect('/admin/pages/')
+      })
+});
 
 //   Exports
 module.exports = router;
