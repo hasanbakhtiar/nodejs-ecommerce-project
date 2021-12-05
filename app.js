@@ -70,7 +70,11 @@ app.use(function (req, res, next) {
 // Set routers
 const pages = require('./routers/pages.js');
 const adminPages = require('./routers/admin_pages.js');
+const adminCategories = require('./routers/admin_categories.js');
+
+
 app.use('/admin/pages',adminPages);
+app.use('/admin/categories',adminCategories);
 app.use('/',pages);
 
 // Start the server
