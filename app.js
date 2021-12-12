@@ -5,6 +5,7 @@ const config = require('./config/database');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const expressValidator = require('express-validator');
+const fileUplad = require('express-fileupload');
 
 // Connect to db
 mongoose.connect(config.database);
@@ -26,6 +27,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Set global errors variable
 app.locals.errors = null;
+
+// Express fileUpload middleware
+app.use(fileUplad());
 
 // Body Parser middleware
 // parse application/x-www-form-urlencoded
